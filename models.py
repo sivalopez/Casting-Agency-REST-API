@@ -23,7 +23,7 @@ class Movie(db.Model):
     release_date = Column(DateTime, default=db.func.now())
 
     def __repr__(self):
-        return format(self)
+        return f'<Movie ID: {self.id}, title: {self.title}, release_date: {self.release_date}>'
 
     def __init__(self, title, release_date):
         self.title = title

@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import Column, String, Integer, DateTime, func
+from sqlalchemy import Column, String, Integer, DateTime, func, CheckConstraint
 from flask_sqlalchemy import SQLAlchemy
 import json
 
@@ -26,9 +26,11 @@ class Movie(db.Model):
     __tablename__ = 'movies'
 
     id = Column(Integer, primary_key=True)
-    title = Column(String, unique=True, nullable=False)
+    title = Column(String(100), unique=True, nullable=False)
     release_date = Column(DateTime, default=db.func.now())
+    actors = db.relationship('Actor', secondary='movies_cast', backref=db.backref('movies', lazy=True))
 
+    # repr method to print Movie object. Helpful for debugging.
     def __repr__(self):
         return f'<Movie ID: {self.id}, title: {self.title}, release_date: {self.release_date}>'
 
@@ -61,10 +63,11 @@ class Actor(db.Model):
     __tablename__ = 'actors'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, unique=True, nullable=False)
-    age = Column(Integer, nullable=False)
-    gender = Column(String)
+    name = Column(String(100), unique=True, nullable=False)
+    age = Column(Integer, CheckConstraint('age>1 and age <= 90'), nullable=False)
+    gender = Column(String(20))
 
+    # repr method to print Actor object. Helpful for debugging.
     def __repr__(self):
         return f'<Actor ID: {self.id}, name: {self.name}, age: {self.age}, gender: {self.gender}>'
 
@@ -91,3 +94,19 @@ class Actor(db.Model):
             'age': self.age,
             'gender': self.gender
         }
+
+'''
+MovieCast class as a join table to maintain the many-to-many relationship
+between movies and actors tables.
+'''
+class MoviesCast(db.Model):
+    __tablename__ = 'movies_cast'
+
+    movie_id = Column(Integer, db.ForeignKey('movies.id'), primary_key=True)
+    actor_id = Column(Integer, db.ForeignKey('actors.id'), primary_key=True)
+
+    # repr method to print MoviesCast object. Helpful for debugging.
+    def __repr__(self):
+        return(
+            f'<MoviesCast movie_id: {self.movie_id}, actor_id: {self.actor_id}>'
+        )

@@ -36,6 +36,41 @@ def getMovies():
   })
 
 '''
+Handles POST request to add a movie.
+This endpoint should return the id of the movie added.
+'''
+@app.route('/movies', methods=['POST'])
+def addMovie():
+  # Get request data
+  data = request.get_json()
+  
+  # Validate request data
+  if data is None:
+    abort(404)
+
+  # Get movie title and release date
+  title = data.get('title', None)
+  releaseDate = data.get('release_date', None)
+
+  # Can't continue if movie title is not available.
+  if title is None:
+    abort(404)
+
+  try:
+    # Create a Movie object and insert movie into the table.
+    movie = Movie(title=title, release_date=releaseDate)
+    movie.insert()
+
+    # Get movie id
+    return jsonify({
+      'success': True,
+      'id': movie.id
+    })
+  except:
+    abort(422)
+
+
+'''
 Handles GET requests for actors.
 This endpoint should return a list of actors.
 '''
@@ -55,9 +90,66 @@ def getActors():
     'actors': formatted_actors
   })
 
+'''
+Handles POST request to add an actor.
+This endpoint should return the id of the actor added.
+'''
+@app.route('/actors', methods=['POST'])
+def addActor():
+  # Get request data
+  data = request.get_json()
+  
+  # Validate request data
+  if data is None:
+    abort(404)
+
+  # Get actor name, age and gender
+  name = data.get('name', None)
+  age = data.get('age', None)
+  gender = data.get('gender', None)
+
+  # Can't continue if actor's name is not available.
+  if name is None:
+    abort(404)
+
+  try:
+    # Create an Actor object and insert actor into the table.
+    actor = Actor(name=name, age=age, gender=gender)
+    actor.insert()
+
+    # Get actor id
+    return jsonify({
+      'success': True,
+      'id': actor.id
+    })
+  except:
+    abort(422)
+
+'''
+Root endpoint for testing.
+'''
 @app.route('/')
 def test():
   return "Hello!"
+
+'''
+Handle errors.
+'''
+@app.errorhandler(404)
+def resourceNotFound(error):
+  return jsonify({
+    'success': False,
+    'error': 404,
+    'message': 'Resource Not Found'
+  })
+
+@app.errorhandler(422)
+def notProcessable(error):
+  return jsonify({
+    'success': False,
+    'error': 422,
+    'message': 'Not Processable'
+  })
 
 if __name__ == '__main__':
     APP.run(host='0.0.0.0', port=8080, debug=True)

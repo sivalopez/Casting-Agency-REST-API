@@ -53,7 +53,7 @@ The API will return these error types when requests fail:
 - General: 
   - Adds the new movie with the given JSON data containing movie title and release date.
   - Request Arguments: data
-  - Returns a dictionary with movie id and success status of true.
+  - Returns a dictionary with the new movie id and success status of true.
 - Sample: `curl -X POST http://127.0.0.1:5000/movies -d '{"title": "Hello Movie", "release_date": "2020-12-31"}' -H 'Content-Type: application/json'`
 ```
 {
@@ -62,6 +62,17 @@ The API will return these error types when requests fail:
 }
 ```
 #### PATCH /movies
+- General:
+  - Updates the movie with the given JSON data containing movie title and release date for the given movie id.
+  - Request Arguments: data
+  - Returns a dictionary with the updated movie id and success status of true.
+- Sample: `curl -X PATCH http://127.0.0.1:5000/movies/2 -d '{"title": "Hello world 2!"}' -H "Content-Type: application/json"`
+```
+{
+  "id": "2", 
+  "success": true
+}
+```
 #### DELETE /movies
 #### GET /actors
 #### POST /actors

@@ -30,7 +30,7 @@ The API will return these error types when requests fail:
 #### GET /movies
 - General: 
   - Fetches a list of movies in which each movie is a dictionary of id, title and release_date.
-  - Returns an object with a list of movies and success status of true or false.
+  - Returns an object with a list of movies and success status of true.
 - Sample: `curl -X GET http://127.0.0.1:5000/movies`
 ```
 {
@@ -50,6 +50,17 @@ The API will return these error types when requests fail:
 }
 ```
 #### POST /movies
+- General: 
+  - Adds the new movie with the given JSON data containing movie title and release date.
+  - Request Arguments: data
+  - Returns a dictionary with movie id and success status of true.
+- Sample: `curl -X POST http://127.0.0.1:5000/movies -d '{"title": "Hello Movie", "release_date": "2020-12-31"}' -H 'Content-Type: application/json'`
+```
+{
+  "id": 2, 
+  "success": true
+}
+```
 #### PATCH /movies
 #### DELETE /movies
 #### GET /actors

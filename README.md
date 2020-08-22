@@ -27,3 +27,32 @@ The API will return these error types when requests fail:
 - 422: Not Processable
 
 ### Endpoints
+#### GET /movies
+- General: 
+  - Fetches a list of movies in which each movie is a dictionary of id, title and release_date.
+  - Returns an object with a list of movies and success status of true or false.
+- Sample: `curl -X GET http://127.0.0.1:5000/movies`
+```
+{
+  "movies": [
+    {
+      "id": 1, 
+      "release_date": "Thu, 31 Dec 2020 00:00:00 GMT", 
+      "title": "Spirited Away"
+    }, 
+    {
+      "id": 2, 
+      "release_date": "Thu, 31 Dec 2020 00:00:00 GMT", 
+      "title": "Hello Movie"
+    }
+  ], 
+  "success": true
+}
+```
+#### POST /movies
+#### PATCH /movies
+#### DELETE /movies
+#### GET /actors
+#### POST /actors
+#### PATCH /actors
+#### DELETE /actors

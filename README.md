@@ -74,6 +74,17 @@ The API will return these error types when requests fail:
 }
 ```
 #### DELETE /movies
+- General:
+  - Deletes the movie for the given movie id.
+  - Returns a dictionary with the deleted movie id and success status of true.
+- Sample: `curl -X DELETE http://127.0.0.1:5000/movies/2`
+```
+{
+  "id": "2", 
+  "success": true
+}
+
+```
 #### GET /actors
 #### POST /actors
 #### PATCH /actors

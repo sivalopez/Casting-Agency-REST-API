@@ -113,6 +113,32 @@ def editMovie(movie_id):
   })
 
 '''
+Handles DELETE requests for movies.
+This endpoint should delete the movie and return the deleted movie_id.
+'''
+@app.route('/movies/<movie_id>', methods=['DELETE'])
+def deleteMovie(movie_id):
+  # Validate the movie_id
+  if movie_id is None:
+    abort(404)
+
+  # Get movie from database and validate
+  movie = Movie.query.filter_by(id=movie_id).one_or_none()
+  if movie is None:
+    abort(404)
+
+  # Delete the movie
+  try:
+    movie.delete()
+  except:
+    abort(422)
+
+  return jsonify({
+    'success': True,
+    'id': movie_id
+  })
+
+'''
 Handles GET requests for actors.
 This endpoint should return a list of actors.
 '''
@@ -200,6 +226,32 @@ def editActor(actor_id):
       actor.gender = gender
 
     actor.update()
+  except:
+    abort(422)
+
+  return jsonify({
+    'success': True,
+    'id': actor_id
+  })
+
+'''
+Handles DELETE requests for actors.
+This endpoint should delete the actor and return the deleted actor_id.
+'''
+@app.route('/actors/<actor_id>', methods=['DELETE'])
+def deleteActor(actor_id):
+  # Validate the actor_id
+  if actor_id is None:
+    abort(404)
+
+  # Get actor from database and validate
+  actor = Actor.query.filter_by(id=actor_id).one_or_none()
+  if actor is None:
+    abort(404)
+
+  # Delete the actor
+  try:
+    actor.delete()
   except:
     abort(422)
 

@@ -69,6 +69,48 @@ def addMovie():
   except:
     abort(422)
 
+'''
+Handles PATCH requests for movies.
+This endpoint edits the movie with the given details and returns the movie_id.
+'''
+@app.route('/movies/<movie_id>', methods=['PATCH'])
+def editMovie(movie_id):
+  print('editMovie() movie_id: [' + movie_id + ']')
+
+  # Validate movie_id
+  if movie_id is None:
+    abort(404)
+
+  # Get data and validate
+  data = request.get_json()
+  if data is None:
+    abort(404)
+  
+  title = data.get('title', None)
+  releaseDate = data.get('release_date', None)
+
+  # Query for the movie from database and validate
+  movie = Movie.query.filter_by(id=movie_id).one_or_none()
+  if movie is None:
+    abort(404)
+
+  # Set movie object with the data values and update the movie.
+  try:
+    # Only set the object with values if they are available.
+    if title is not None:
+      movie.title = title
+    
+    if releaseDate is not None:
+      movie.release_date = releaseDate
+    
+    movie.update()
+  except:
+    abort(422)
+
+  return jsonify({
+    'success': True,
+    'id': movie_id
+  })
 
 '''
 Handles GET requests for actors.
@@ -126,6 +168,47 @@ def addActor():
     abort(422)
 
 '''
+Handles PATCH request for actors.
+This endpoint updates an actor with the given values and returns actor id.
+'''
+@app.route('/actors/<actor_id>', methods=['PATCH'])
+def editActor(actor_id):
+  # Validate actor_id and data.
+  if actor_id is None:
+    abort(404)
+
+  data = request.get_json()
+  if data is None:
+    abort(404)
+
+  name = data.get('name', None)
+  age = data.get('age', None)
+  gender = data.get('gender', None)
+
+  # Query actor_id to get actor object and validate actor object.
+  try:
+    actor = Actor.query.filter_by(id=actor_id).one_or_none()
+    if actor is None:
+      abort(404)
+
+    # Only update the fields that are available.
+    if name is not None:
+      actor.name = name
+    if age is not None:
+      actor.age = age
+    if gender is not None:
+      actor.gender = gender
+
+    actor.update()
+  except:
+    abort(422)
+
+  return jsonify({
+    'success': True,
+    'id': actor_id
+  })
+
+'''
 Root endpoint for testing.
 '''
 @app.route('/')
@@ -133,14 +216,30 @@ def test():
   return "Hello!"
 
 '''
-Handle errors.
+Handle errors for different response codes.
 '''
+@app.errorhandler(400)
+def badRequest(error):
+  return jsonify({
+    'success': False,
+    'error': 400,
+    'message': 'Bad Request'
+  })
+
 @app.errorhandler(404)
 def resourceNotFound(error):
   return jsonify({
     'success': False,
     'error': 404,
     'message': 'Resource Not Found'
+  })
+
+@app.errorhandler(405)
+def methodNotAllowed(error):
+  return jsonify({
+    'success': False,
+    'error': 405,
+    'message': 'Method Not Allowed'
   })
 
 @app.errorhandler(422)

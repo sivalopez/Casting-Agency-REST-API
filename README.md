@@ -86,6 +86,61 @@ The API will return these error types when requests fail:
 
 ```
 #### GET /actors
+- General: 
+  - Fetches a list of actors in which each actor is a dictionary of id, name, age and gender.
+  - Returns an object with a list of actors and success status of true.
+- Sample: `curl -X GET http://127.0.0.1:5000/actors`
+```
+{
+  "actors": [
+    {
+      "age": 40, 
+      "gender": "Female", 
+      "id": 1, 
+      "name": "Julia Roberts"
+    },  
+    {
+      "age": 34, 
+      "gender": "Male", 
+      "id": 2, 
+      "name": "Henry Williams"
+    }
+  ], 
+  "success": true
+}
+```
 #### POST /actors
+- General: 
+  - Adds the new actor with the given JSON data containing actor's name, age and gender.
+  - Request Arguments: data
+  - Returns a dictionary with the new actor id and success status of true.
+- Sample: `curl -X POST http://127.0.0.1:5000/actors -d '{"name": "Henry Williams", "age": 34, "gender": "Male"}' -H 'Content-Type: application/json'`
+```
+{
+  "id": 2, 
+  "success": true
+}
+```
 #### PATCH /actors
+- General:
+  - Updates the actor with the given JSON data containing actor's name, age and gender for the given actor id.
+  - Request Arguments: data
+  - Returns a dictionary with the updated actor id and success status of true.
+- Sample: `curl -X PATCH http://127.0.0.1:5000/actors/1 -d '{"name": "Julia Roberts"}' -H "Content-Type: application/json"`
+```
+{
+  "id": "1", 
+  "success": true
+}
+```
 #### DELETE /actors
+- General:
+  - Deletes the actor for the given actor id.
+  - Returns a dictionary with the deleted actor id and success status of true.
+- Sample: `curl -X DELETE http://127.0.0.1:5000/actors/2`
+```
+{
+  "id": "2", 
+  "success": true
+}
+```

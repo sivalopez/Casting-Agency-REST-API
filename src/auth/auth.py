@@ -1,3 +1,4 @@
+import json
 from flask import request
 from functools import wraps
 from jose import jwt
@@ -151,4 +152,4 @@ def requires_auth(permission=''):
             has_permission = check_permissions(permission, payload)
             return f(payload, *args, **kwargs)
         return wrapper
-    return requires_auth_decorator()
+    return requires_auth_decorator

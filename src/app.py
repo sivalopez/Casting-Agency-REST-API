@@ -41,7 +41,8 @@ Handles POST request to add a movie.
 This endpoint should return the id of the movie added.
 '''
 @app.route('/movies', methods=['POST'])
-def addMovie():
+@requires_auth('post:movies')
+def addMovie(payload):
   # Get request data
   data = request.get_json()
   
@@ -75,7 +76,8 @@ Handles PATCH requests for movies.
 This endpoint edits the movie with the given details and returns the movie_id.
 '''
 @app.route('/movies/<movie_id>', methods=['PATCH'])
-def editMovie(movie_id):
+@requires_auth('patch:movies')
+def editMovie(payload, movie_id):
   print('editMovie() movie_id: [' + movie_id + ']')
 
   # Validate movie_id
@@ -118,7 +120,8 @@ Handles DELETE requests for movies.
 This endpoint should delete the movie and return the deleted movie_id.
 '''
 @app.route('/movies/<movie_id>', methods=['DELETE'])
-def deleteMovie(movie_id):
+@requires_auth('delete:movies')
+def deleteMovie(payload, movie_id):
   # Validate the movie_id
   if movie_id is None:
     abort(404)
@@ -164,7 +167,8 @@ Handles POST request to add an actor.
 This endpoint should return the id of the actor added.
 '''
 @app.route('/actors', methods=['POST'])
-def addActor():
+@requires_auth('post:actors')
+def addActor(payload):
   # Get request data
   data = request.get_json()
   
@@ -199,7 +203,8 @@ Handles PATCH request for actors.
 This endpoint updates an actor with the given values and returns actor id.
 '''
 @app.route('/actors/<actor_id>', methods=['PATCH'])
-def editActor(actor_id):
+@requires_auth('patch:actors')
+def editActor(payload, actor_id):
   # Validate actor_id and data.
   if actor_id is None:
     abort(404)
@@ -240,7 +245,8 @@ Handles DELETE requests for actors.
 This endpoint should delete the actor and return the deleted actor_id.
 '''
 @app.route('/actors/<actor_id>', methods=['DELETE'])
-def deleteActor(actor_id):
+@requires_auth('delete:actors')
+def deleteActor(payload, actor_id):
   # Validate the actor_id
   if actor_id is None:
     abort(404)
@@ -266,7 +272,7 @@ Root endpoint for testing.
 '''
 @app.route('/')
 def test():
-  return "Hello!"
+  return "Hello! Welcome to the FSND Casting Agency!"
 
 '''
 Handle errors for different response codes.

@@ -1,12 +1,13 @@
-import json
+import json, os
 from flask import request
 from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
 
-AUTH0_DOMAIN = 'fsnd-capstone-silo.au.auth0.com'
-ALGORITHMS = ['RS256']
-API_AUDIENCE = 'casting_agency_api'
+# Read environment variables for use.
+AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN', 'fsnd-capstone-silo.au.auth0.com')
+ALGORITHMS = os.environ.get('ALGORITHMS', ['RS256'])
+API_AUDIENCE = os.environ.get('API_AUDIENCE', 'casting_agency_api')
 
 '''
 Error handling

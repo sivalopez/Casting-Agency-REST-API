@@ -3,13 +3,23 @@ Udacity Fullstack Developer Nano Degree capstone project.
 ## Motivation for the project
 
 ## Getting Started
+### Accessing the hosted API
+Application is hosted live at http://FSND-Capstone-Casting-Agency.herokuapp.com
+### Authentication
+Instructions for setting up authentication for testing endpoints at live application endpoint.
+
+### Local Development
 ### Installing Dependencies
 Project dependencies, local development and hosting instructions
+```
+pip install -r requirements.txt
+```
+
 ### Running the server
 Detailed instructions for scripts to install any project dependencies and to run the development server.
 
+
 ## API Reference
-### RBAC controls
 ### Error Handling
 Errors are returned as JSON objects.
 - Sample: `curl -X PATCH http://127.0.0.1:5000/actors/2`

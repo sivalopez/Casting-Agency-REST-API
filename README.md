@@ -3,10 +3,35 @@ Udacity Fullstack Developer Nano Degree capstone project.
 ## Motivation for the project
 
 ## Getting Started
-### Accessing the hosted API
-Application is hosted live at http://FSND-Capstone-Casting-Agency.herokuapp.com
 ### Authentication
 Instructions for setting up authentication for testing endpoints at live application endpoint.
+- Create an Auth0 tenant domain.
+- Create a new Single Page Web Application.
+  - Configure "Application Login URI"
+  - Configure "Allowed Callback URLs"
+- Create a new API.
+  - Enable RBAC
+  - Enable Add Permissions in the Access Token
+- Create API permission for the following:
+  - get:movies
+  - post:movies
+  - patch:movies
+  - delete:movies
+  - get:actors
+  - post:actors
+  - patch:actors
+  - delete:actors
+- Create user roles and assign permissions.
+  - Casting Director - Assign all permissions except delete:movies.
+  - Executive Producer - Assign all permissions.
+- Create two users and assign roles.
+  - Create a user and assign Casting Director role.
+  - Create another user and assign Executive Producer role.
+- Generate JWTs for both the users.
+- Update setup.sh with correct AUTH0_DOMAIN, ALGORITHMS and API_AUDIENCE.
+
+### Accessing the hosted API
+Application is hosted live at http://FSND-Capstone-Casting-Agency.herokuapp.com
 
 ### Local Development
 ### Installing Dependencies

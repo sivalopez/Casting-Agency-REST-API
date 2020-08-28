@@ -19,8 +19,15 @@ def setup_db(app, database_path=database_path):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.app = app
     db.init_app(app)
-    db.create_all()
+    db_drop_and_create_all()
 
+'''
+Drops all tables and creates them again.
+Nice way to cleanup the database.
+'''
+def db_drop_and_create_all():
+    db.drop_all()
+    db.create_all()
 '''
 Movie class for creating and managing movies database table.
 '''

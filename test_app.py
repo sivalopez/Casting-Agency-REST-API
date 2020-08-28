@@ -4,13 +4,13 @@ from flask import jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 from src.app import create_app
-from src.models import setup_db, Movie, Actor
+from src.models import setup_db, db_drop_and_create_all, Movie, Actor
 
 # Read the environment variables to get tokens.
-
-CASTING_DIRECTOR_EXPIRED_TOKEN = os.environ.get('CASTING_DIRECTOR_EXPIRED_TOKEN')
 CASTING_DIRECTOR_TOKEN = os.environ.get('CASTING_DIRECTOR_TOKEN')
+CASTING_DIRECTOR_EXPIRED_TOKEN = os.environ.get('CASTING_DIRECTOR_EXPIRED_TOKEN')
 EXECUTIVE_PRODUCER_TOKEN = os.environ.get('EXECUTIVE_PRODUCER_TOKEN')
+EXECUTIVE_PRODUCER_EXPIRED_TOKEN = os.environ.get('EXECUTIVE_PRODUCER_EXPIRED_TOKEN')
 
 '''
 Test case for Casting Agency.
@@ -29,20 +29,20 @@ class CastingAgencyTestCase(unittest.TestCase):
         with self.app.app_context():
             self.db = SQLAlchemy()
             self.db.init_app(self.app)
-            self.db.drop_all()
-            self.db.create_all()
 
     def tearDown(self):
+        # clear the tables after every test.
+        db_drop_and_create_all()
         pass
 
     def test_post_movies_success(self):
-        newMovie = {'title': 'Sliding Doors7', 'release_date': '12-06-1999'}
+        newMovie = {'title': 'Sliding Doors', 'release_date': '12-06-1998'}
        
         res = self.client().post('/movies', data=json.dumps(newMovie),
                                 headers={'Content-Type': 'application/json', 'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
 
         json_res = res.json
-        print('SL res_json: ' + str(res.json))
+        print('SL test_post_movies_success(): ' + str(res.json))
 
         self.assertEqual(res.status_code, 200)
         self.assertTrue(json_res['success'])
@@ -59,10 +59,15 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(res.json['message'], 'Authorization header is expected.')
 
     def test_get_movies_success(self):
+        # Add a movie so that we can get them later with GET request.
+        newMovie = {'title': 'Sliding Doors', 'release_date': '12-06-1998'}
+        post_res = self.client().post('/movies', data=json.dumps(newMovie),
+                                headers={'Content-Type': 'application/json', 'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
+        self.assertEqual(post_res.status_code, 200)
+        self.assertTrue(post_res.json['success'])
+
         res = self.client().get('/movies')
         json_res = res.json
-
-        # print('SL test_get_movies_success() res_json: ' + str(json_res))
 
         self.assertEqual(res.status_code, 200)
         self.assertTrue(json_res['success'])
@@ -79,7 +84,7 @@ class CastingAgencyTestCase(unittest.TestCase):
 
     def test_edit_movies_success(self):
         # Add a new movie to edit later.
-        newMovie = {'title': 'Sliding Doors8', 'release_date': '12-06-1999'}
+        newMovie = {'title': 'Sliding Doors', 'release_date': '12-06-1998'}
         post_res = self.client().post('/movies', data=json.dumps(newMovie),
                         headers={'Content-Type': 'application/json',
                             'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
@@ -112,12 +117,11 @@ class CastingAgencyTestCase(unittest.TestCase):
         post_res = self.client().post('/movies', data=json.dumps(newMovie),
                         headers={'Content-Type': 'application/json',
                             'Authorization': 'Bearer ' + str(EXECUTIVE_PRODUCER_TOKEN)})
-
-
         self.assertTrue(post_res.json['success'])
         movie_id = post_res.json['id']
         self.assertIsNotNone(movie_id)
 
+        # Delete the movie.
         res = self.client().delete('/movies/' + str(movie_id),
                         headers={'Content-Type': 'application/json',
                             'Authorization': 'Bearer ' + str(EXECUTIVE_PRODUCER_TOKEN)})
@@ -132,6 +136,66 @@ class CastingAgencyTestCase(unittest.TestCase):
                         headers={'Content-Type': 'application/json',
                             'Authorization': 'Bearer ' + str(EXECUTIVE_PRODUCER_TOKEN)})
 
+        self.assertEqual(res.status_code, 200)
+        self.assertFalse(res.json['success'])
+        self.assertEqual(res.json['error'], 404)
+        self.assertEqual(res.json['message'], 'Resource Not Found')
+
+    def test_post_actors_success(self):
+        newActor = {'name': 'Stephenie Gilmore', 'age': 36, 'gender': 'Female'}
+        res = self.client().post('/actors', data=json.dumps(newActor),
+                        headers={'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
+        print('SL test_post_actors_success(): ' + str(res.json))
+
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(res.json['success'])
+        self.assertIsNotNone(res.json['id'])
+
+    def test_post_actors_error(self):
+        # There is a unique constraint on actor's name.
+        # Inserting the same name will result in error.
+        # Should get 422 Not Processable error.
+        newActor = {'name': 'Julia Williamson', 'age': 46, 'gender': 'Female'}
+        res = self.client().post('/actors', data=json.dumps(newActor),
+                        headers={'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(res.json['success'])
+        self.assertIsNotNone(res.json['id'])
+
+        duplicate_res = self.client().post('/actors', data=json.dumps(newActor),
+                        headers={'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
+        print('SL test_post_actors_error(): ' + str(duplicate_res.json))
+
+        self.assertEqual(duplicate_res.status_code, 200)
+        self.assertFalse(duplicate_res.json['success'])
+        self.assertEqual(duplicate_res.json['error'], 422)
+        self.assertEqual(duplicate_res.json['message'], 'Not Processable')
+
+    def test_get_actors_success(self):
+        # Add an actor before calling get actors.
+        newActor = {'name': 'Julia Williamson', 'age': 46, 'gender': 'Female'}
+        post_res = self.client().post('/actors', data=json.dumps(newActor),
+                        headers={'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
+        self.assertEqual(post_res.status_code, 200)
+        self.assertTrue(post_res.json['success'])
+
+        res = self.client().get('/actors')
+
+        print('SL test_get_actors_success(): ', str(res.json))
+
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(res.json['success'])
+        self.assertGreater(len(res.json['actors']), 0)
+
+    def test_get_actors_error(self):
+        # No data should throw 404 Not found error.
+        res = self.client().get('/actors')
+
+        print('SL test_get_actors_error(): ' + str(res.json))
         self.assertEqual(res.status_code, 200)
         self.assertFalse(res.json['success'])
         self.assertEqual(res.json['error'], 404)

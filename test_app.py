@@ -201,6 +201,75 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(res.json['error'], 404)
         self.assertEqual(res.json['message'], 'Resource Not Found')
 
+    def test_patch_actors_success(self):
+        # Add an actor first to update later.
+        newActor = {'name': 'Julia Williamson', 'age': 46, 'gender': 'Female'}
+        post_res = self.client().post('/actors', data=json.dumps(newActor),
+                        headers={'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
+        self.assertEqual(post_res.status_code, 200)
+        self.assertTrue(post_res.json['success'])
+        actorId = post_res.json['id']
+
+        # Edit the actor
+        res = self.client().patch('/actors/' + str(actorId), 
+                        data=json.dumps({'name': 'Julia Williams', 'age': 48}),
+                        headers={'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(res.json['success'])
+        self.assertEqual(res.json['id'], str(actorId))
+
+    def test_patch_actors_error(self):
+        newActor = {'name': 'Julia Williamson', 'age': 46, 'gender': 'Female'}
+        post_res = self.client().post('/actors', data=json.dumps(newActor),
+                        headers={'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
+        self.assertEqual(post_res.status_code, 200)
+        self.assertTrue(post_res.json['success'])
+        actorId = post_res.json['id']
+
+        # Use request with incorrect actor data.
+        # Should return 400 Bad Request error.
+        res = self.client().patch('/actors/' + str(actorId),
+                        data={'name': 'Julia Williamson', 'age': '50'},
+                        headers={'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
+        print('SL test_patch_actors_error(): ' + str(res.json))
+        self.assertEqual(res.status_code, 200)
+        self.assertFalse(res.json['success'])
+        self.assertEqual(res.json['error'], 400)
+
+    def test_delete_actors_success(self):
+        # Add an actor to delete later.
+        newActor = {'name': 'Julia Williamson', 'age': 46, 'gender': 'Female'}
+        post_res = self.client().post('/actors', data=json.dumps(newActor),
+                        headers={'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
+        self.assertEqual(post_res.status_code, 200)
+        self.assertTrue(post_res.json['success'])
+        actorId = post_res.json['id']
+
+        # Delete actor.
+        res = self.client().delete('/actors/' + str(actorId),
+                        headers={'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
+        print('SL test_delete_actors_success(): ' + str(res.json))
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(res.json['success'])
+        self.assertEqual(res.json['id'], str(actorId))
+
+    def test_delete_actors_error(self):
+        # Delete non-existent actor
+        res = self.client().delete('/actors/99',
+                        headers={'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
+        print('SL test_delete_actors_error(): ' + str(res.json))
+        self.assertEqual(res.status_code, 200)
+        self.assertFalse(res.json['success'])
+        self.assertEqual(res.json['error'], 404)
+        self.assertEqual(res.json['message'], 'Resource Not Found')
+
 '''
 Provides command line interface to the test script.
 '''

@@ -62,7 +62,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         # Add a movie so that we can get them later with GET request.
         newMovie = {'title': 'Sliding Doors', 'release_date': '12-06-1998'}
         post_res = self.client().post('/movies', data=json.dumps(newMovie),
-                                headers={'Content-Type': 'application/json', 'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
+                        headers={'Content-Type': 'application/json', 
+                            'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
         self.assertEqual(post_res.status_code, 200)
         self.assertTrue(post_res.json['success'])
 
@@ -140,13 +141,44 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertFalse(res.json['success'])
         self.assertEqual(res.json['error'], 404)
         self.assertEqual(res.json['message'], 'Resource Not Found')
+    
+    def test_delete_movies_no_permission(self):
+        # Add a new movie to edit later.
+        newMovie = {'title': 'Sliding Doors2', 'release_date': '12-06-1999'}
+        post_res = self.client().post('/movies', data=json.dumps(newMovie),
+                        headers={'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
+        self.assertTrue(post_res.json['success'])
+        movie_id = post_res.json['id']
+        self.assertIsNotNone(movie_id)
+        # Casting Director role cannot delete movies.
+        # Should get unauthorised_request error.
+        res = self.client().delete('/movies/99',
+                        headers={'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
+        print('SL test_delete_movies_no_permission(): ' + str(res.json))
+        self.assertEqual(res.status_code, 403)
+        self.assertFalse(res.json['success'])
+        self.assertEqual(res.json['error'], 'unauthorized_request')
+        self.assertEqual(res.json['message'], 'No permission to perform the request.')
 
-    def test_post_actors_success(self):
+    def test_post_actors_success_casting_director(self):
         newActor = {'name': 'Stephenie Gilmore', 'age': 36, 'gender': 'Female'}
         res = self.client().post('/actors', data=json.dumps(newActor),
                         headers={'Content-Type': 'application/json',
                             'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_TOKEN)})
-        print('SL test_post_actors_success(): ' + str(res.json))
+        print('SL test_post_actors_success_casting_director(): ' + str(res.json))
+
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(res.json['success'])
+        self.assertIsNotNone(res.json['id'])
+
+    def test_post_actors_success_executive_producer(self):
+        newActor = {'name': 'Daniel Walters', 'age': 66, 'gender': 'Male'}
+        res = self.client().post('/actors', data=json.dumps(newActor),
+                        headers={'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + str(EXECUTIVE_PRODUCER_TOKEN)})
+        print('SL test_post_actors_success_executive_producer(): ' + str(res.json))
 
         self.assertEqual(res.status_code, 200)
         self.assertTrue(res.json['success'])
@@ -269,6 +301,29 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertFalse(res.json['success'])
         self.assertEqual(res.json['error'], 404)
         self.assertEqual(res.json['message'], 'Resource Not Found')
+
+    def test_rbac_invalid_header(self):
+        # 
+        newActor = {'name': 'Julia Williamson', 'age': 46, 'gender': 'Female'}
+        post_res = self.client().post('/actors', data=json.dumps(newActor),
+                        headers={'Content-Type': 'application/json',
+                            'Authorization': 'Bearer'})
+        print('SL test_rbac_invalid_header(): ' + str(post_res.json))
+        self.assertEqual(post_res.status_code, 401)
+        self.assertFalse(post_res.json['success'])
+        self.assertEqual(post_res.json['message'], 'Token not found.')
+
+    def test_rbac_expired_token(self):
+        newActor = {'name': 'Julia Williamson', 'age': 46, 'gender': 'Female'}
+        post_res = self.client().post('/actors', data=json.dumps(newActor),
+                        headers={'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + str(CASTING_DIRECTOR_EXPIRED_TOKEN)})
+        print('SL test_rbac_expired_token(): ' + str(post_res.json))
+        self.assertEqual(post_res.status_code, 401)
+        self.assertFalse(post_res.json['success'])
+        self.assertEqual(post_res.json['error'], 'token_expired')
+        self.assertEqual(post_res.json['message'], 'Token expired.')
+        
 
 '''
 Provides command line interface to the test script.

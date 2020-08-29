@@ -8,8 +8,6 @@ database_path = "postgres://{}/{}".format('localhost:5432', database_name)
 
 db = SQLAlchemy()
 
-#Adding a test comment.
-
 '''
 Sets up flask application configuration for SQL Alchemy 
 and binds application with SQLAlchemy service.

@@ -47,7 +47,7 @@ Detailed instructions for scripts to install any project dependencies and to run
 ## API Reference
 ### Error Handling
 Errors are returned as JSON objects.
-- Sample: `curl -X PATCH http://127.0.0.1:5000/actors/2`
+- Sample: `curl -X PATCH http://127.0.0.1:5000/movies/2 -d '{"title": "Hello Movie", "release_date": "2020-12-31"}' -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkdJM0x0SEdpYnVuMmFaOXVKSHJuRyJ9.eyJpc3MiOiJodHRwczovL2ZzbmQtY2Fwc3RvbmUtc2lsby5hdS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWY0MzY3NDYyMWRhM2YwMDY4NzkzYWY0IiwiYXVkIjoiY2FzdGluZ19hZ2VuY3lfYXBpIiwiaWF0IjoxNTk4Njk3MTk4LCJleHAiOjE1OTg3ODM1OTgsImF6cCI6ImNoZnhTVUtXQWlBUUtyVGxheG5tR0dRdnljTEx0Z2FoIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6YWN0b3JzIiwiZ2V0OmFjdG9ycyIsImdldDptb3ZpZXMiLCJwYXRjaDphY3RvcnMiLCJwYXRjaDptb3ZpZXMiLCJwb3N0OmFjdG9ycyIsInBvc3Q6bW92aWVzIl19.cJUmYVs72O0oDt0i1iaCXyxNa5dSABoEei2CYwamm29fXETgBDu5LRn0VKm2U0ZSWSoPcjr2LY9ffTApZn9UW0c6Ibpr9lTL7foozNQqBAbPt0YGumLTyVv34D9YCh6GZ_qZtjfKq1t1Z04TTRZaKOUiDnohVFwCDYTmx48RDCTk9vGkDPm6OD0Apf12sw0XgZfSCbK0MVCLlnT16TSbCzsexDZLwpi7fhFGbtTws_6kQco-e26Z_yzFy14IGUjF8RvBIK_rkzaswPTIdxj2-_5hI_i-9Bdp0wPTrk1Wd4zHl0vpnRMH3Piou_B9uIMfn9HH1LlEVodyinSPCITalA'`
 ```
 {
   "error": 404, 
@@ -60,6 +60,17 @@ The API will return these error types when requests fail:
 - 404: Resource Not Found
 - 405: Method Not Allowed
 - 422: Not Processable
+- token_expired: Token expired.
+- missing_authorization_header: Authorization header is expected.
+- invalid_header: Authorization header must start with 'Bearer'.
+- invalid_header: Authorization header must be bearer token.
+- invalid_header: Token not found.
+- invalid_header: Authorization malformed.
+- invalid_header: Unable to parse authentication token.
+- invalid_header: Unable to find the appropriate key.
+- invalid_header: Authorization header must include permissions.
+- invalid_claims: Incorrect claims. Please, check the audience and issuer.
+- unauthorized_request: No permission to perform the request.
 
 ### Endpoints
 #### GET /movies

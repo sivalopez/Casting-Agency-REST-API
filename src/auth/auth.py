@@ -1,4 +1,5 @@
 import json, os
+import http.client
 from flask import request
 from functools import wraps
 from jose import jwt
@@ -25,6 +26,8 @@ def get_token_auth_header():
     # Get the Authorization header from the request.
     auth = request.headers.get('Authorization', None)
 
+    # print('SL get_token_auth_header() - auth: [' + str(auth) + ']')
+
     # Check if header is present, otherwise throw error.
     if auth is None:
         raise AuthError({
@@ -39,7 +42,7 @@ def get_token_auth_header():
     if header_parts[0].lower() != 'bearer':
         raise AuthError({
             'code': 'invalid_header',
-            'description': 'Authorization header must start with "Bearer".'
+            'description': 'Authorization header must start with \'Bearer\'.'
         }, 401)
     elif len(header_parts) < 2:
         raise AuthError({
@@ -64,6 +67,8 @@ def verify_decode_jwt(token):
     # Load the public keys from our AUTH0_DOMAIN to verify the given token.
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read())
+
+    # print('SL verify_decode_jwt() token: [' + str(token) + ']')
 
     # Get decoded value of the token to check KeyIDs.
     unverified_header = jwt.get_unverified_header(token)

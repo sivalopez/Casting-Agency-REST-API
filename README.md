@@ -22,8 +22,8 @@ Install these by running the following command:
 pip install -r requirements.txt
 ```
 #### Run Application
-Before running the application export the required environment variables from `setup.sh`.
-And create database.
+Before running the application create database and export the required environment variables from `setup.sh`.
+NOTE: The application drops all tables and creates them again each time Flask server is run.
 ```
 createdb casting_agency
 source setup.sh
@@ -31,38 +31,27 @@ flask run
 ```
 
 ### Tests
-
-### Authentication
-Instructions for setting up authentication for testing endpoints at live application endpoint.
-- Create an Auth0 tenant domain.
-- Create a new Single Page Web Application.
-  - Configure "Application Login URI"
-  - Configure "Allowed Callback URLs"
-- Create a new API.
-  - Enable RBAC
-  - Enable Add Permissions in the Access Token
-- Create API permission for the following:
-  - get:movies
-  - post:movies
-  - patch:movies
-  - delete:movies
-  - get:actors
-  - post:actors
-  - patch:actors
-  - delete:actors
-- Create user roles and assign permissions.
-  - Casting Director - Assign all permissions except delete:movies.
-  - Executive Producer - Assign all permissions.
-- Create two users and assign roles.
-  - Create a user and assign Casting Director role.
-  - Create another user and assign Executive Producer role.
-- Generate JWTs for both the users.
-- Update setup.sh with correct AUTH0_DOMAIN, ALGORITHMS and API_AUDIENCE.
-
-### Accessing the hosted API
-Application is hosted live at http://FSND-Capstone-Casting-Agency.herokuapp.com
+Before running the tests create database and export the required enviroument variables from `setup.sh`.
+NOTE: The test_app.py setup drops all tables and creates them again each time tests are run.
+```
+createdb casting_agency_testdb
+source setup.sh
+python3 test_app.py
+```
 
 ## API Reference
+### Getting Started
+#### Application URL
+- Base URL: When run locally the base URL is `http://127.0.0.1:5000/`
+- Hosted URL: Application is hosted live at `http://FSND-Capstone-Casting-Agency.herokuapp.com`
+#### Authentication
+Casting Agency application allows users to perform different actions based on their roles.
+- Roles:
+  - Casting Director
+  - Executive Producer
+This application requires JWT for authentication and authorization purposes.
+These tokens have been specified as environmental variables in `setup.sh`.
+
 ### Error Handling
 Errors are returned as JSON objects.
 - Sample: `curl -X PATCH http://127.0.0.1:5000/movies/2 -d '{"title": "Hello Movie", "release_date": "2020-12-31"}' -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkdJM0x0SEdpYnVuMmFaOXVKSHJuRyJ9.eyJpc3MiOiJodHRwczovL2ZzbmQtY2Fwc3RvbmUtc2lsby5hdS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWY0MzY3NDYyMWRhM2YwMDY4NzkzYWY0IiwiYXVkIjoiY2FzdGluZ19hZ2VuY3lfYXBpIiwiaWF0IjoxNTk4Njk3MTk4LCJleHAiOjE1OTg3ODM1OTgsImF6cCI6ImNoZnhTVUtXQWlBUUtyVGxheG5tR0dRdnljTEx0Z2FoIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6YWN0b3JzIiwiZ2V0OmFjdG9ycyIsImdldDptb3ZpZXMiLCJwYXRjaDphY3RvcnMiLCJwYXRjaDptb3ZpZXMiLCJwb3N0OmFjdG9ycyIsInBvc3Q6bW92aWVzIl19.cJUmYVs72O0oDt0i1iaCXyxNa5dSABoEei2CYwamm29fXETgBDu5LRn0VKm2U0ZSWSoPcjr2LY9ffTApZn9UW0c6Ibpr9lTL7foozNQqBAbPt0YGumLTyVv34D9YCh6GZ_qZtjfKq1t1Z04TTRZaKOUiDnohVFwCDYTmx48RDCTk9vGkDPm6OD0Apf12sw0XgZfSCbK0MVCLlnT16TSbCzsexDZLwpi7fhFGbtTws_6kQco-e26Z_yzFy14IGUjF8RvBIK_rkzaswPTIdxj2-_5hI_i-9Bdp0wPTrk1Wd4zHl0vpnRMH3Piou_B9uIMfn9HH1LlEVodyinSPCITalA'`

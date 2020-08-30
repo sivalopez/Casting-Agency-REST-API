@@ -3,7 +3,8 @@ from sqlalchemy import Column, String, Integer, DateTime, func, CheckConstraint
 from flask_sqlalchemy import SQLAlchemy
 import json
 
-database_name = "casting_agency"
+# Get database name from environment variable.
+database_name = os.environ.get("DATABASE_NAME", "casting_agency")
 database_path = "postgres://{}/{}".format('localhost:5432', database_name)
 
 db = SQLAlchemy()

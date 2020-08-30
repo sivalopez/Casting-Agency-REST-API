@@ -198,3 +198,5 @@ The API will return these error types when requests fail:
   "success": true
 }
 ```
+## Authors
+Siva Lopez

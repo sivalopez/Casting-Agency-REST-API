@@ -1,4 +1,5 @@
-import json, os
+import json
+import os
 import http.client
 from flask import request
 from functools import wraps
@@ -6,22 +7,29 @@ from jose import jwt
 from urllib.request import urlopen
 
 # Read environment variables for use.
-AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN', 'fsnd-capstone-silo.au.auth0.com')
+AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN',
+                              'fsnd-capstone-silo.au.auth0.com')
 ALGORITHMS = os.environ.get('ALGORITHMS', ['RS256'])
 API_AUDIENCE = os.environ.get('API_AUDIENCE', 'casting_agency_api')
+
 
 '''
 Error handling
 '''
+
+
 class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
         self.status_code = status_code
 
+
 '''
 Gets the token from Authorization header.
 Returns the token.
 '''
+
+
 def get_token_auth_header():
     # Get the Authorization header from the request.
     auth = request.headers.get('Authorization', None)
@@ -54,15 +62,19 @@ def get_token_auth_header():
             'code': 'invalid_header',
             'description': 'Authorization header must be bearer token.'
         }, 401)
-    
+
     # Get the token from the parsed header.
     token = header_parts[1]
     return token
 
+
 '''
-Decode the given JWT token and verify that its using Auth0 /.well-known/jwks.json
+Decode the given JWT token and
+verify that its using Auth0 /.well-known/jwks.json
 Returns the decoded payload.
 '''
+
+
 def verify_decode_jwt(token):
     # Load the public keys from our AUTH0_DOMAIN to verify the given token.
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
@@ -122,10 +134,13 @@ def verify_decode_jwt(token):
         'description': 'Unable to find the appropriate key.'
     }, 401)
 
+
 '''
 Checks that given permissions are available in the payload.
 Returns True if permissions match otherwise raises AuthError.
 '''
+
+
 def check_permissions(permission, payload):
     # Check that permissions are included in the payload.
     if payload['permissions'] is None:
@@ -143,9 +158,12 @@ def check_permissions(permission, payload):
 
     return True
 
+
 '''
 @requires_auth(permission) decorator method checks the user permissions.
 '''
+
+
 def requires_auth(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)

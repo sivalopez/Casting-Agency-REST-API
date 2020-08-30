@@ -9,7 +9,7 @@ By completing this project, I am applying the skills learnt during the course of
 
 ## Getting Started
 ### Pre-requisites & Local Development
-This project relies on Python3 and pip already installed in the local machine.
+This project relies on Python3, pip and PostgreSQL already installed in the local machine.
 #### Virtual Environment
 Create a virtual environment to keep the Python dependencies separate.
 ```
@@ -22,8 +22,10 @@ Install these by running the following command:
 pip install -r requirements.txt
 ```
 #### Run Application
-Before running the application export the required environment variables from `setup.sh`
+Before running the application export the required environment variables from `setup.sh`.
+And create database.
 ```
+createdb casting_agency
 source setup.sh
 flask run
 ```

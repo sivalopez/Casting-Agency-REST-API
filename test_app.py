@@ -4,7 +4,7 @@ from flask import jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 from src.app import create_app
-from src.models import setup_db, db_drop_and_create_all, Movie, Actor
+from src.database.models import setup_db, db_drop_and_create_all, Movie, Actor
 
 # Read the environment variables to get tokens.
 CASTING_DIRECTOR_TOKEN = os.environ.get('CASTING_DIRECTOR_TOKEN')

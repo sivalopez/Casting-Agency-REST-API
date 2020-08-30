@@ -1,6 +1,11 @@
-# FSND Capstone Casting Agency Project
-Udacity Fullstack Developer Nano Degree capstone project.
-## Motivation for the project
+# Casting Agency 
+The Casting Agency application is responsible for creating movies and actors as well as managing them.
+This project has been created as a capstone project as part of the Udacity's Fullstack Developer Nano Degree (FSND).
+By completing this project, I am applying the skills learnt during the course of this Nano Degree such as 
+- utilizing SQLAlchemy to model database and run queries in PostgreSQL,
+- implementing RESTful API endpoints using Flask as well as including unit tests,
+- enabling authentication and Role Based Access Contol using Auth0 and
+- deploying this API on Heroku.
 
 ## Getting Started
 ### Authentication

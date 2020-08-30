@@ -1,13 +1,35 @@
 # Casting Agency 
 The Casting Agency application is responsible for creating movies and actors as well as managing them.
 This project has been created as a capstone project as part of the Udacity's Fullstack Developer Nano Degree (FSND).
-By completing this project, I am applying the skills learnt during the course of this Nano Degree such as 
+By completing this project, I am applying the skills learnt during the course of this Nano Degree such as:
 - utilizing SQLAlchemy to model database and run queries in PostgreSQL,
 - implementing RESTful API endpoints using Flask as well as including unit tests,
 - enabling authentication and Role Based Access Contol using Auth0 and
 - deploying this API on Heroku.
 
 ## Getting Started
+### Pre-requisites & Local Development
+This project relies on Python3 and pip already installed in the local machine.
+#### Virtual Environment
+Create a virtual environment to keep the Python dependencies separate.
+```
+python3 -m venv env --no-site-packages
+```
+#### Install dependencies
+Project dependencies are required packages and these are located in requirements.txt.
+Install these by running the following command:
+```
+pip install -r requirements.txt
+```
+#### Run Application
+Before running the application export the required environment variables from `setup.sh`
+```
+source setup.sh
+flask run
+```
+
+### Tests
+
 ### Authentication
 Instructions for setting up authentication for testing endpoints at live application endpoint.
 - Create an Auth0 tenant domain.
@@ -37,17 +59,6 @@ Instructions for setting up authentication for testing endpoints at live applica
 
 ### Accessing the hosted API
 Application is hosted live at http://FSND-Capstone-Casting-Agency.herokuapp.com
-
-### Local Development
-### Installing Dependencies
-Project dependencies, local development and hosting instructions
-```
-pip install -r requirements.txt
-```
-
-### Running the server
-Detailed instructions for scripts to install any project dependencies and to run the development server.
-
 
 ## API Reference
 ### Error Handling

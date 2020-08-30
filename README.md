@@ -43,7 +43,7 @@ python3 test_app.py
 ### Getting Started
 #### Application URL
 - Base URL: When run locally the base URL is `http://127.0.0.1:5000/`
-- Hosted URL: Application is hosted live at `http://FSND-Capstone-Casting-Agency.herokuapp.com`
+- Hosted URL: Application is hosted live at `https://silo-casting-agency.herokuapp.com`
 #### Authentication
 Casting Agency application allows users to perform different actions based on their roles.
 - Roles:

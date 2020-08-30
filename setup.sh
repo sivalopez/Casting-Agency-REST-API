@@ -1,4 +1,4 @@
-export DATABASE_NAME=casting_agency
+export DATABASE_URL=postgres://localhost:5432/casting_agency
 export AUTH0_DOMAIN='fsnd-capstone-silo.au.auth0.com'
 export ALGORITHMS=['RS256']
 export API_AUDIENCE='casting_agency_api'

@@ -22,7 +22,7 @@ Install these by running the following command:
 pip install -r requirements.txt
 ```
 #### Run Application
-Before running the application create database and export the required environment variables from `setup.sh`.
+Before running the application, create database and export the required environment variables from `setup.sh`.
 NOTE: The application drops all tables and creates them again each time Flask server is run.
 ```
 createdb casting_agency
@@ -31,7 +31,7 @@ flask run
 ```
 
 ### Tests
-Before running the tests create database and export the required enviroument variables from `setup.sh`.
+Before running the tests, create database and export the required enviroument variables from `setup.sh`.
 NOTE: The test_app.py setup drops all tables and creates them again each time tests are run.
 ```
 createdb casting_agency_testdb
@@ -49,6 +49,7 @@ Casting Agency application allows users to perform different actions based on th
 - Roles:
   - Casting Director
   - Executive Producer
+
 This application requires JWT for authentication and authorization purposes.
 These tokens have been specified as environmental variables in `setup.sh`.
 

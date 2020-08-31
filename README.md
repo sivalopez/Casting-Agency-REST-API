@@ -44,15 +44,17 @@ python3 test_app.py
 - Base URL: When run locally the base URL is `http://127.0.0.1:5000/`
 - Hosted URL: Application is hosted live at `https://silo-fsnd-casting-agency.herokuapp.com`
 #### Authentication
-Casting Agency application allows users to perform different actions based on their roles.
-- Roles:
-  - Casting Director
-  - Executive Producer
-
 This application requires JWT for authentication and authorization purposes.
 These tokens have been specified as environmental variables in `setup.sh` for:
-CASTING_DIRECTOR_TOKEN
-EXECUTIVE_PRODUCER_TOKEN
+- CASTING_DIRECTOR_TOKEN
+- EXECUTIVE_PRODUCER_TOKEN
+
+Casting Agency application allows users to perform different actions based on their roles.
+- Roles:
+  - Casting Director: Allowed permissions are: view, create, edit, delete actors, but can only view, create and edit movies.
+  - Executive Producer: All permissions allowed as Casting Director role, and can also delete movies.
+
+NOTE: Viewing actors and movies does not require any authentication.
 
 ### Error Handling
 Errors are returned as JSON objects.

@@ -23,7 +23,6 @@ pip install -r requirements.txt
 ```
 #### Run Application
 Before running the application, create database and export the required environment variables from `setup.sh`.
-NOTE: The application drops all tables and creates them again each time Flask server is run.
 ```
 createdb casting_agency
 source setup.sh
@@ -43,7 +42,7 @@ python3 test_app.py
 ### Getting Started
 #### Application URL
 - Base URL: When run locally the base URL is `http://127.0.0.1:5000/`
-- Hosted URL: Application is hosted live at `https://silo-casting-agency.herokuapp.com`
+- Hosted URL: Application is hosted live at `https://silo-fsnd-casting-agency.herokuapp.com`
 #### Authentication
 Casting Agency application allows users to perform different actions based on their roles.
 - Roles:
@@ -51,7 +50,9 @@ Casting Agency application allows users to perform different actions based on th
   - Executive Producer
 
 This application requires JWT for authentication and authorization purposes.
-These tokens have been specified as environmental variables in `setup.sh`.
+These tokens have been specified as environmental variables in `setup.sh` for:
+CASTING_DIRECTOR_TOKEN
+EXECUTIVE_PRODUCER_TOKEN
 
 ### Error Handling
 Errors are returned as JSON objects.

@@ -3,8 +3,8 @@ from flask import Flask, request, abort, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
-from src.database.models import setup_db, Movie, Actor
-from src.auth.auth import AuthError, requires_auth
+from database.models import setup_db, Movie, Actor
+from auth.auth import AuthError, requires_auth
 
 
 def create_app(test_config=None):
@@ -320,7 +320,7 @@ def create_app(test_config=None):
 
     return app
 
-    app = create_app()
+app = create_app()
 
-    if __name__ == '__main__':
-        app.run(host='0.0.0.0', port=8080, debug=True)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080, debug=True)
